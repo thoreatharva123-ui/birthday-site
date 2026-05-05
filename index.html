@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
+  background: url('bg.jpg') no-repeat center/cover;
+}
+
+/* Sections */
+.section {
+  height: 100vh;
+  width: 100%;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  transition: 0.8s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(8px);
+}
+
+.section.active {
+  top: 0;
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(1.1); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Character */
+.character {
+  width: 180px;
+  animation: popUp 1.5s ease;
+}
+
+@keyframes popUp {
+  from { transform: translateY(200px) scale(0); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* Colors */
+#home { background: rgba(255,192,203,0.7); }
+#memories { background: rgba(255,255,255,0.7); }
+#message { background: rgba(123,108,246,0.8); color: white; }
+
+/* Text */
+h1 { font-size: 42px; color: #8b0000; }
+h2 { font-size: 32px; }
+p { max-width: 700px; text-align: center; }
+
+/* Buttons */
+button {
+  padding: 12px 25px;
+  border: none;
+  background: #ff6b6b;
+  color: white;
+  border-radius: 25px;
+  cursor: pointer;
+  margin: 10px;
+}
+
+/* Gallery */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  width: 90%;
+  max-width: 1100px;
+  margin-top: 30px;
+}
+
+.gallery img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+.gallery img:hover {
+  transform: scale(1.05);
+}
+
+/* Fullscreen */
+.fullscreen {
+  position: fixed !important;
+  top: 50%;
+  left: 50%;
+  width: 90vw !important;
+  height: 90vh !important;
+  object-fit: contain !important;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  background: black;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* Close Button */
+.closeBtn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: red;
+  color: white;
+  font-size: 20px;
+  border-radius: 50%;
+  padding: 8px 12px;
+  cursor: pointer;
+  z-index: 1000;
+  display: none;
+}
+
+/* Hearts */
+.heart {
+  position: absolute;
+  animation: float 6s linear infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(100vh); opacity: 1; }
+  100% { transform: translateY(-10vh); opacity: 0; }
+}
+
+/* Confetti */
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  animation: fall 3s linear forwards;
+}
+
+@keyframes fall {
+  to { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" src="music.mp3" loop></audio>
+<div class="closeBtn" onclick="closeImage()">✖</div>
+
+<!-- SECTION 1 -->
+<section id="home" class="section active">
+  <img class="character" src="teddy.png">
+  <h1>Happy Birthday ❤️</h1>
+  <p>You make my world brighter every day</p>
+  <button onclick="startExperience()">Start Celebration 🎉</button>
+</section>
+
+<!-- SECTION 2 -->
+<section id="memories" class="section">
+  <h2>Our Memories 💕</h2>
+
+  <div class="gallery">
+    <img src="img1.jpg">
+    <img src="img2.jpg">
+    <img src="img3.jpg">
+    <img src="img4.jpg">
+    <img src="img5.jpg">
+    <img src="img6.jpg">
+    <img src="img7.jpg">
+    <img src="img8.jpg">
+  </div>
+
+  <button onclick="goToSection('home')">⬅ Back</button>
+  <button onclick="goToSection('message')">Next 💌</button>
+</section>
+
+<!-- SECTION 3 -->
+<section id="message" class="section">
+  <h2>A Special Message 💖</h2>
+  <p>
+    You are my happiness, my best friend, my everything.<br><br>
+    I’m so lucky to have you in my life ❤️<br><br>
+    Happy Birthday!
+  </p>
+
+  <button onclick="goToSection('memories')">⬅ Back</button>
+</section>
+
+<script>
+
+/* Start */
+function startExperience() {
+  goToSection('memories');
+  document.getElementById("music").play();
+  createConfetti();
+}
+
+/* Navigation */
+function goToSection(id) {
+  document.querySelectorAll('.section').forEach(sec => {
+    sec.classList.remove('active');
+  });
+  document.getElementById(id).classList.add('active');
+}
+
+/* Gallery */
+let currentImg = null;
+
+document.querySelectorAll('.gallery img').forEach(img => {
+  img.onclick = () => {
+    currentImg = img;
+    img.classList.add('fullscreen');
+    document.querySelector('.closeBtn').style.display = 'block';
+  };
+});
+
+function closeImage() {
+  if (currentImg) {
+    currentImg.classList.remove('fullscreen');
+    document.querySelector('.closeBtn').style.display = 'none';
+  }
+}
+
+/* Hearts */
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerHTML = "❤️";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = (10 + Math.random() * 20) + "px";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 6000);
+}, 400);
+
+/* Confetti */
+function createConfetti() {
+  for (let i = 0; i < 100; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.background = `hsl(${Math.random()*360},100%,50%)`;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3000);
+  }
+}
+
+</script>
+
+</body>
+</html>
